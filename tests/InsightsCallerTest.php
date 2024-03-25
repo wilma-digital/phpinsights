@@ -1,21 +1,29 @@
 <?php
 
+use PhpInsights\InsightsCaller;
+use PhpInsights\InvalidJsonException;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-
 class InsightsCallerTest extends TestCase
 {
+    #[Test]
     public function testCanConstructed()
     {
-        $caller = new \PhpInsights\InsightsCaller('foo');
-        return $this->assertInstanceOf('\PhpInsights\InsightsCaller', $caller);
+        $caller = new InsightsCaller('foo');
+        return $this->assertInstanceOf(InsightsCaller::class, $caller);
 
     }
 
-    public function testInvalidApiKey()
+    /**
+     * @throws InvalidJsonException
+     */
+    #[Test]
+    public function testInvalidApiKey(): void
     {
         $this->expectException(\PhpInsights\ApiRequestException::class);
-        $caller = new \PhpInsights\InsightsCaller('foo');
-        $caller->getResponse('foo');
+        $caller = new InsightsCaller('foo');
+        $caller->
+        getResponse('foo');
     }
 
 }

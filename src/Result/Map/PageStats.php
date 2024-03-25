@@ -1,218 +1,138 @@
 <?php
-namespace PhpInsights\Result\Map;
 
+namespace PhpInsights\Result\Map;
 
 class PageStats
 {
+    private int $numberResources;
 
-    /** @var int */
-    private $numberResources;
+    private int $numberHosts;
 
-    /** @var int */
-    private $numberHosts;
+    private int $totalRequestBytes;
 
-    /** @var int */
-    private $totalRequestBytes;
+    private int $numberStaticResources;
 
-    /** @var int */
-    private $numberStaticResources;
+    private int $htmlResponseBytes;
 
-    /** @var int */
-    private $htmlResponseBytes;
+    private int $cssResponseBytes;
 
-    /** @var int */
-    private $cssResponseBytes;
+    private int $imageResponseBytes;
 
-    /** @var int */
-    private $imageResponseBytes;
+    private int $javascriptResponseBytes;
 
-    /** @var int */
-    private $javascriptResponseBytes;
+    private int $otherResponseBytes;
 
-    /** @var int */
-    private $otherResponseBytes;
+    private int $numberJsResources;
 
-    /** @var int */
-    private $numberJsResources;
+    private int $numberCssResources;
 
-    /** @var int */
-    private $numberCssResources;
-
-    /**
-     * @return int
-     */
-    public function getNumberResources()
+    public function getNumberResources(): int
     {
         return $this->numberResources;
     }
 
-    /**
-     * @param int $numberResources
-     */
-    public function setNumberResources($numberResources)
+    public function setNumberResources(int $numberResources): void
     {
         $this->numberResources = $numberResources;
     }
 
-    /**
-     * @return int
-     */
-    public function getNumberHosts()
+    public function getNumberHosts(): int
     {
         return $this->numberHosts;
     }
 
-    /**
-     * @param int $numberHosts
-     */
-    public function setNumberHosts($numberHosts)
+    public function setNumberHosts(int $numberHosts): void
     {
         $this->numberHosts = $numberHosts;
     }
 
-    /**
-     * @return int
-     */
-    public function getTotalRequestBytes()
+    public function getTotalRequestBytes(): int
     {
         return $this->totalRequestBytes;
     }
 
-    /**
-     * @param int $totalRequestBytes
-     */
-    public function setTotalRequestBytes($totalRequestBytes)
+    public function setTotalRequestBytes(int $totalRequestBytes): void
     {
         $this->totalRequestBytes = $totalRequestBytes;
     }
 
-    /**
-     * @return int
-     */
-    public function getNumberStaticResources()
+    public function getNumberStaticResources(): int
     {
         return $this->numberStaticResources;
     }
 
-    /**
-     * @param int $numberStaticResources
-     */
-    public function setNumberStaticResources($numberStaticResources)
+    public function setNumberStaticResources(int $numberStaticResources): void
     {
         $this->numberStaticResources = $numberStaticResources;
     }
 
-    /**
-     * @return int
-     */
-    public function getHtmlResponseBytes()
+    public function getHtmlResponseBytes(): int
     {
         return $this->htmlResponseBytes;
     }
 
-    /**
-     * @param int $htmlResponseBytes
-     */
-    public function setHtmlResponseBytes($htmlResponseBytes)
+    public function setHtmlResponseBytes(int $htmlResponseBytes): void
     {
         $this->htmlResponseBytes = $htmlResponseBytes;
     }
 
-    /**
-     * @return int
-     */
-    public function getCssResponseBytes()
+    public function getCssResponseBytes(): int
     {
         return $this->cssResponseBytes;
     }
 
-    /**
-     * @param int $cssResponseBytes
-     */
-    public function setCssResponseBytes($cssResponseBytes)
+    public function setCssResponseBytes(int $cssResponseBytes): void
     {
         $this->cssResponseBytes = $cssResponseBytes;
     }
 
-    /**
-     * @return int
-     */
-    public function getImageResponseBytes()
+    public function getImageResponseBytes(): int
     {
         return $this->imageResponseBytes;
     }
 
-    /**
-     * @param int $imageResponseBytes
-     */
-    public function setImageResponseBytes($imageResponseBytes)
+    public function setImageResponseBytes(int $imageResponseBytes): void
     {
         $this->imageResponseBytes = $imageResponseBytes;
     }
 
-    /**
-     * @return int
-     */
-    public function getJavascriptResponseBytes()
+    public function getJavascriptResponseBytes(): int
     {
         return $this->javascriptResponseBytes;
     }
 
-    /**
-     * @param int $javascriptResponseBytes
-     */
-    public function setJavascriptResponseBytes($javascriptResponseBytes)
+    public function setJavascriptResponseBytes(int $javascriptResponseBytes): void
     {
         $this->javascriptResponseBytes = $javascriptResponseBytes;
     }
 
-    /**
-     * @return int
-     */
-    public function getOtherResponseBytes()
+    public function getOtherResponseBytes(): int
     {
         return $this->otherResponseBytes;
     }
 
-    /**
-     * @param int $otherResponseBytes
-     */
-    public function setOtherResponseBytes($otherResponseBytes)
+    public function setOtherResponseBytes(int $otherResponseBytes): void
     {
         $this->otherResponseBytes = $otherResponseBytes;
     }
 
-    /**
-     * @return int
-     */
-    public function getNumberJsResources()
+    public function getNumberJsResources(): int
     {
         return $this->numberJsResources;
     }
 
-    /**
-     * @param int $numberJsResources
-     */
-    public function setNumberJsResources($numberJsResources)
+    public function setNumberJsResources(int $numberJsResources): void
     {
         $this->numberJsResources = $numberJsResources;
     }
 
-    /**
-     * @return int
-     */
-    public function getNumberCssResources()
+    public function getNumberCssResources(): int
     {
         return $this->numberCssResources;
     }
 
-    /**
-     * @param int $numberCssResources
-     */
-    public function setNumberCssResources($numberCssResources)
+    public function setNumberCssResources(int $numberCssResources): void
     {
         $this->numberCssResources = $numberCssResources;
     }
-
-
 }

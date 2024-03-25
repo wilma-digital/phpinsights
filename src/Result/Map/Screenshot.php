@@ -1,29 +1,21 @@
 <?php
+
 namespace PhpInsights\Result\Map;
 
 class Screenshot
 {
 
-    /** @var string */
-    public $mime_type;
+    public string $mime_type;
 
-    /** @var string */
-    public $data;
+    public string $data;
 
-    /** @var int */
-    public $width;
+    public int $width;
 
-    /** @var int */
-    public $height;
+    public int $height;
 
     // TODO set "page_rect"
-
-    /**
-     * @return string
-     */
-    public function getData()
+    public function getData(): string
     {
-
         // https://developers.google.com/speed/docs/insights/v2/reference/pagespeedapi/runpagespeed#screenshot.data
         return strtr($this->data, [
             '-' => '+',
@@ -31,23 +23,13 @@ class Screenshot
         ]);
     }
 
-    /**
-     * @return string
-     */
-    public function getMimeType()
+    public function getMimeType(): string
     {
         return $this->mime_type;
     }
 
-    /**
-     * @param string $alt
-     *
-     * @return string
-     */
-    public function getImageHtml($alt = '')
+    public function getImageHtml(string $alt = ''): string
     {
         return sprintf('<img src="data:%s;base64,%s" alt="%s">', $this->getMimeType(), $this->getData(), $alt);
     }
-
-
 }

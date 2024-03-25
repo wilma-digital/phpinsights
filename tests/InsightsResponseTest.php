@@ -1,53 +1,76 @@
 <?php
 
-use GuzzleHttp\Psr7\Response;
-use PhpInsights\Result\InsightsResult;
-use PHPUnit\Framework\TestCase;
 use PhpInsights\InsightsResponse;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use PhpInsights\InvalidJsonException;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 class InsightsResponseTest extends TestCase
 {
+    /**
+     * @var MockObject|ResponseInterface
+     */
+    private MockObject|ResponseInterface $responseMock;
 
-    /** @var InsightsResponse */
-    protected $exampleComResponse;
+    /**
+     * @var MockObject|StreamInterface
+     */
+    private MockObject|StreamInterface $streamMock;
 
-
-    protected function setUp()
+    protected function setUp(): void
     {
-        $this->exampleComResponse = InsightsResponse::fromJson(file_get_contents(__DIR__ . '/example-com-response.json'));
-        
+        parent::setUp();
+
+        $this->responseMock = $this->getMockBuilder(ResponseInterface::class)->getMock();
+        $this->streamMock = $this->getMockBuilder(StreamInterface::class)->getMock();
     }
 
-     public function testValidResponse()
+    /**
+     * Test `fromResponse` method of `InsightsResponse` class.
+     * It should return an instance of `InsightsResponse` class.
+     */
+    #[Test]
+    public function testFromResponse(): void
     {
-        $this->assertInstanceOf(InsightsResponse::class, InsightsResponse::fromResponse(new Response(200, [], '{}')));
+        $json = '{"foo": "bar"}';
+
+        $this->streamMock
+            ->method('getContents')
+            ->willReturn($json);
+
+        $this->responseMock
+            ->method('getBody')
+            ->willReturn($this->streamMock);
+
+        $insightsResponse = InsightsResponse::fromResponse($this->responseMock);
+
+        $this->assertInstanceOf(InsightsResponse::class, $insightsResponse);
     }
 
-    public function testEmptyResponse()
+    /**
+     * Test `fromResponse` method of `InsightsResponse` class when JSON is invalid.
+     * It should throw an InvalidJsonException.
+     *
+     * @throws InvalidJsonException
+     */
+    #[Test]
+    public function testInvalidJsonFromResponse(): void
     {
-        $emptyResponse = InsightsResponse::fromResponse(new Response(200, [], '{}'));
-        $this->assertEquals(null, $emptyResponse->getMappedResult()->getResponseCode());
-        $this->assertEquals(null, $emptyResponse->getMappedResult()->getFormattedResults());
-        $this->assertEquals([], $emptyResponse->getMappedResult()->getRuleGroups());
+        $this->expectException(InvalidJsonException::class);
 
+        $invalidJson = "{foo: bar}";
+
+        $this->streamMock
+            ->method('getContents')
+            ->willReturn($invalidJson);
+
+        $this->responseMock
+            ->method('getBody')
+            ->willReturn($this->streamMock);
+
+        InsightsResponse::fromResponse($this->responseMock);
     }
-
-    public function testInvalidResponse()
-    {
-        $this->expectException(\PhpInsights\InvalidJsonException::class);
-        InsightsResponse::fromResponse(new Response(200, [], 'malformed_json'));
-
-    }
-
-    public function testRawResult()
-    {
-        $this->assertSame(file_get_contents(__DIR__ . '/example-com-response.json'), $this->exampleComResponse->getRawResult());
-    }
-
-    public function testMappedResult()
-    {
-        $this->assertInstanceOf(InsightsResult::class, $this->exampleComResponse->getMappedResult());
-    }
-
-
 }

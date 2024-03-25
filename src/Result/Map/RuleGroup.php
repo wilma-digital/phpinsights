@@ -1,29 +1,23 @@
 <?php
+
 namespace PhpInsights\Result\Map;
 
 class RuleGroup
 {
 
-    const GROUP_SPEED = 'SPEED';
-    const GROUP_USABILITY = 'USABILITY';
+    public const GROUP_SPEED = 'SPEED';
 
-    /** @var int */
-    protected $score;
+    public const GROUP_USABILITY = 'USABILITY';
 
-    /**
-     * @return int
-     */
-    public function getScore()
+    protected int $score;
+
+    public function getScore(): int
     {
         return $this->score;
     }
 
-    /**
-     * @param int $score
-     */
-    public function setScore($score)
+    public function setScore(int $score): void
     {
         $this->score = $score;
     }
-
 }

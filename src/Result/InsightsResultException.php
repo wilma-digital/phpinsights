@@ -1,7 +1,9 @@
 <?php
 namespace PhpInsights\Result;
 
-class InsightsResultException extends \Exception
+use Exception;
+
+class InsightsResultException extends Exception
 {
 
 }

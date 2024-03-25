@@ -1,108 +1,78 @@
 <?php
+
 namespace PhpInsights\Result;
 
 use PhpInsights\Result\Map\FormattedResults;
+use PhpInsights\Result\Map\PageStats;
 use PhpInsights\Result\Map\RuleGroup;
 use PhpInsights\Result\Map\Screenshot;
+use stdClass;
 
 class InsightsResult
 {
 
-    /** @var string */
-    private $kind;
+    private string $kind;
 
-    /** @var string */
-    private $id;
+    private string $id;
 
-    /** @var int */
-    public $responseCode;
+    public string $title;
 
-    /** @var string */
-    public $title;
+    /** @var RuleGroup[] */
+    public array $ruleGroups;
 
-    /** @var \PhpInsights\Result\Map\RuleGroup[] */
-    public $ruleGroups;
+    public PageStats $pageStats;
 
-    /** @var \PhpInsights\Result\Map\PageStats */
-    public $pageStats;
+    public FormattedResults $formattedResults;
 
-    /** @var FormattedResults */
-    public $formattedResults;
+    public stdClass $version;
 
-    /** @var \stdClass */
-    public $version;
+    public Screenshot $screenshot;
 
-    /** @var \PhpInsights\Result\Map\Screenshot */
-    public $screenshot;
+    public function __construct(public ?int $responseCode)
+    {
+    }
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @param string $id
-     */
-    public function setId($id)
+    public function setId(string $id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return string
-     */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    /**
-     * @param string $title
-     */
-    public function setTitle($title)
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }
 
-    /**
-     * @return string
-     */
-    public function getKind()
+    public function getKind(): string
     {
         return $this->kind;
     }
 
-    /**
-     * @param string $kind
-     */
-    public function setKind($kind)
+    public function setKind(string $kind): void
     {
         $this->kind = $kind;
     }
 
-    /**
-     * @return int
-     */
-    public function getResponseCode()
+    public function getResponseCode(): int
     {
         return $this->responseCode;
     }
 
-    /**
-     * @param int $responseCode
-     */
-    public function setResponseCode($responseCode)
+    public function setResponseCode(int $responseCode): void
     {
         $this->responseCode = $responseCode;
     }
 
-    /**
-     * @param FormattedResults $formattedResults
-     */
-    public function setFormattedResults(FormattedResults $formattedResults)
+    public function setFormattedResults(FormattedResults $formattedResults): void
     {
         $this->formattedResults = $formattedResults;
     }
@@ -110,43 +80,30 @@ class InsightsResult
     /**
      * @return Map\RuleGroup[]
      */
-    public function getRuleGroups()
+    public function getRuleGroups(): array
     {
-        return empty($this->ruleGroups)
-            ? []
-            : $this->ruleGroups;
+        return [];
     }
 
-    /**
-     * @return Map\PageStats
-     */
-    public function getPageStats()
+    public function getPageStats(): PageStats
     {
         return $this->pageStats;
     }
 
-    /**
-     * @return Map\FormattedResults
-     */
-    public function getFormattedResults()
+    public function getFormattedResults(): FormattedResults
     {
         return $this->formattedResults;
     }
 
-    /**
-     * @return \stdClass
-     */
-    public function getVersion()
+    public function getVersion(): stdClass
     {
         return $this->version;
     }
 
     /**
-     * @return int
-     *
      * @throws UsabilityScoreNotAvailableException
      */
-    public function getUsabilityScore()
+    public function getUsabilityScore(): int
     {
         $ruleGroups = $this->getRuleGroups();
 
@@ -157,10 +114,7 @@ class InsightsResult
         return $ruleGroups[RuleGroup::GROUP_USABILITY]->getScore();
     }
 
-    /**
-     * @return int
-     */
-    public function getSpeedScore()
+    public function getSpeedScore(): int
     {
         $ruleGroups = $this->getRuleGroups();
 
@@ -168,20 +122,15 @@ class InsightsResult
 
     }
 
-    /**
-     * @return bool
-     */
-    public function hasScreenshot()
+    public function hasScreenshot(): bool
     {
-        return !empty($this->screenshot);
+        return $this->screenshot instanceof Screenshot;
     }
 
     /**
-     * @return Screenshot
-     *
      * @throws ScreenshotNotAvailableException
      */
-    public function getScreenshot()
+    public function getScreenshot(): Screenshot
     {
 
         if (!$this->hasScreenshot()) {
@@ -190,6 +139,4 @@ class InsightsResult
 
         return $this->screenshot;
     }
-
-
 }

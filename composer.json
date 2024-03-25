@@ -1,16 +1,30 @@
 {
     "name": "dsentker/phpinsights",
     "description": "A php wrapper for Googles page speed insights",
-    "version": "0.2.3",
+    "version": "0.3.0",
     "require": {
-        "php": "^5.4 || ^7.0",
-        "netresearch/jsonmapper": "^1.1",
-        "guzzlehttp/guzzle": "^6.2"
+        "php": "^8.2",
+        "netresearch/jsonmapper": "^4.4",
+        "guzzlehttp/guzzle": "^7.8"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.7"
+        "roave/security-advisories": "dev-latest",
+        "phpunit/phpunit": "^11.0",
+        "rector/rector": "^1.0"
     },
     "autoload": {
         "psr-4": {"PhpInsights\\": "src"}
+    },
+    "scripts": {
+        "cs-fix": "pint",
+        "rector-fix": "rector",
+        "rector-preview": "rector --dry-run",
+        "rector-ci": "rector --dry-run --no-progress-bar"
+    },
+    "scripts-descriptions": {
+        "cs-fix": "Fixing the Code Style according to PER standards",
+        "rector-fix": "Fixing the code according to the Rector Rules",
+        "rector-preview": "Showing the suggested changes from Rector",
+        "rector-ci": "Executing Rector in a CI workflow"
     }
 }

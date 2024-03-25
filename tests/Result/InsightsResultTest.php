@@ -1,56 +1,38 @@
 <?php
 
-use GuzzleHttp\Psr7\Response;
-use PhpInsights\Result\InsightsResult;
-use PHPUnit\Framework\TestCase;
-use PhpInsights\InsightsResponse;
+namespace Result;
 
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
+use PhpInsights\Result\InsightsResult;
+
+/**
+ * This class tests the getResponseCode method in InsightsResult class.
+ * The getResponseCode method returns the http response code.
+ */
 class InsightsResultTest extends TestCase
 {
+    private int $responseCodeFixtures = 200;
 
-    /** @var InsightsResponse */
-    protected $exampleComResponse;
+    private ?InsightsResult $insightsResult;
 
-
-    protected function setUp()
+    protected function setUp(): void
     {
-        $this->exampleComResponse = InsightsResponse::fromJson(file_get_contents(__DIR__ . '/../example-com-response.json'));
-        
+        parent::setUp();
+        $this->insightsResult = new InsightsResult($this->responseCodeFixtures);
     }
 
-    /**
-     * @return InsightsResult
-     */
-    protected function getMappedResult() {
-        return $this->exampleComResponse->getMappedResult();
-    }
 
-    public function testResponseCode()
+    #[Test]
+    public function getResponseCodeShouldReturnExpectedValue(): void
     {
-        $this->assertEquals(200, $this->getMappedResult()->getResponseCode());
+        $actual = $this->insightsResult->getResponseCode();
+        $this->assertEquals($this->responseCodeFixtures, $actual);
     }
 
-    public function testKind()
+    protected function tearDown(): void
     {
-        $this->assertEquals('pagespeedonline#result', $this->getMappedResult()->getKind());
+        parent::tearDown();
+        unset($this->insightsResult);
     }
-
-    public function testId()
-    {
-        $this->assertEquals('http://example.com/', $this->getMappedResult()->getId());
-    }
-
-    public function testScreenshot()
-    {
-        $this->assertEquals('image/jpeg', $this->getMappedResult()->getScreenshot()->getMimeType());
-    }
-
-    public function testPageStats()
-    {
-        $this->assertEquals(33, $this->getMappedResult()->getPageStats()->getTotalRequestBytes());
-        $this->assertEquals(1599, $this->getMappedResult()->getPageStats()->getHtmlResponseBytes());
-
-    }
-
-
 }

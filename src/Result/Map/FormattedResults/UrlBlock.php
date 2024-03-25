@@ -2,27 +2,20 @@
 
 namespace PhpInsights\Result\Map\FormattedResults;
 
-
 class UrlBlock extends FormattedBlock
 {
+    public Header $header;
 
-    /** @var \PhpInsights\Result\Map\FormattedResults\Header */
-    public $header;
-
-    /** @var \PhpInsights\Result\Map\FormattedResults\Url[] */
-    public $urls;
+    /** @var Url[] */
+    public array $urls;
 
     /**
      * @return Url[]
      */
-    public function getUrls()
+    public function getUrls(): array
     {
-        return (!empty($this->urls) && is_array($this->urls))
+        return ($this->urls !== [] && is_array($this->urls))
             ? $this->urls
             : [];
     }
-
-
-
-
 }

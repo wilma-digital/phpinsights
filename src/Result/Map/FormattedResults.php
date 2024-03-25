@@ -1,4 +1,5 @@
 <?php
+
 namespace PhpInsights\Result\Map;
 
 use PhpInsights\Result\Map\FormattedResults\DefaultRuleResult;
@@ -6,24 +7,17 @@ use PhpInsights\Result\Map\FormattedResults\DefaultRuleResult;
 class FormattedResults
 {
 
-    /** @var string */
-    private $locale;
+    private string $locale;
 
-    /** @var \PhpInsights\Result\Map\FormattedResults\DefaultRuleResult[] */
-    private $ruleResults;
+    /** @var DefaultRuleResult[] */
+    private array $ruleResults;
 
-    /**
-     * @return string
-     */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->locale;
     }
 
-    /**
-     * @param string $locale
-     */
-    public function setLocale($locale)
+    public function setLocale(string $locale): void
     {
         $this->locale = $locale;
     }
@@ -31,25 +25,23 @@ class FormattedResults
     /**
      * @return DefaultRuleResult[]
      */
-    public function getRuleResults()
+    public function getRuleResults(): array
     {
         return $this->ruleResults;
     }
 
     /**
-     * @param \PhpInsights\Result\Map\FormattedResults\DefaultRuleResult[] $ruleResults
+     * @param DefaultRuleResult[] $ruleResults
      */
-    public function setRuleResults($ruleResults)
+    public function setRuleResults(array $ruleResults): void
     {
         $this->ruleResults = $ruleResults;
     }
 
     /**
-     * @param string $group
-     *
      * @return DefaultRuleResult[]
      */
-    public function getRuleResultsByGroup($group)
+    public function getRuleResultsByGroup(string $group): array
     {
         $results = [];
         foreach ($this->getRuleResults() as $rule => $ruleResult) {
@@ -60,6 +52,5 @@ class FormattedResults
 
         return $results;
     }
-
 
 }

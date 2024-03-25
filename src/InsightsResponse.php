@@ -1,47 +1,42 @@
 <?php
+
 namespace PhpInsights;
 
+use JsonMapper;
+use JsonMapper_Exception;
 use PhpInsights\Result\InsightsResult;
 use Psr\Http\Message\ResponseInterface;
+use stdClass;
 
-class InsightsResponse
+readonly class InsightsResponse
 {
 
-    /** @var string */
-    private $rawJsonResponse;
-
-    /** @var \stdClass */
-    private $decodedResponse;
+    private stdClass $decodedResponse;
 
     /**
      * Not callable directly, use InsightsResponse::fromResponse or
      * Insightsresponse::fromJson instead.
      *
-     * @param string $jsonResponse
+     * @throws InvalidJsonException
      */
-    private function __construct($jsonResponse)
+    private function __construct(private string $rawJsonResponse)
     {
-        $this->rawJsonResponse = $jsonResponse;
-        $this->decodedResponse = static::validateResponse($jsonResponse);
+        $this->decodedResponse = static::validateResponse($this->rawJsonResponse);
     }
 
     /**
-     * @param string $json
      *
-     * @return \stdClass
      *
      * @throws InvalidJsonException
      */
-    public static function validateResponse($json)
+    public static function validateResponse(string $json): stdClass
     {
-
-        $result = json_decode($json);
+        $result = json_decode($json, false);
 
         // switch and check possible JSON errors
         switch (json_last_error()) {
             case JSON_ERROR_NONE:
                 return $result;
-                break;
             case JSON_ERROR_DEPTH:
                 $error = 'The maximum stack depth has been exceeded.';
                 break;
@@ -78,43 +73,36 @@ class InsightsResponse
     }
 
     /**
-     * @param ResponseInterface $response
-     *
-     * @return InsightsResponse
+     * @throws InvalidJsonException
      */
-    public static function fromResponse(ResponseInterface $response)
+    public static function fromResponse(ResponseInterface $response): InsightsResponse
     {
         return new static($response->getBody()->getContents());
     }
 
     /**
-     * @param string $json
-     *
-     * @return InsightsResponse
+     * @throws InvalidJsonException
      */
-    public static function fromJson($json)
+    public static function fromJson(string $json): InsightsResponse
     {
         return new static($json);
     }
 
     /**
-     * @return InsightsResult
+     * @throws JsonMapper_Exception
      */
-    public function getMappedResult()
+    public function getMappedResult(): InsightsResult
     {
 
-        $mapper = new \JsonMapper();
+        $mapper = new JsonMapper();
 
         /** @var InsightsResult $map */
-        $map = $mapper->map($this->decodedResponse, new InsightsResult());
+        $map = $mapper->map($this->decodedResponse, new InsightsResult(null));
 
         return $map;
     }
 
-    /**
-     * @return string
-     */
-    public function getRawResult()
+    public function getRawResult(): string
     {
         return $this->rawJsonResponse;
     }

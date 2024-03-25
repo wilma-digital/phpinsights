@@ -1,74 +1,56 @@
 <?php
+
 namespace PhpInsights;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Promise;
 use GuzzleHttp\Exception\TransferException;
 
 class InsightsCaller
 {
 
-    const STRATEGY_MOBILE = 'mobile';
+    public const STRATEGY_MOBILE = 'mobile';
 
-    const STRATEGY_DESKTOP = 'desktop';
+    public const STRATEGY_DESKTOP = 'desktop';
 
-    const GI_API_ENDPOINT = 'https://www.googleapis.com/pagespeedonline/v2/runPagespeed?url=%s&strategy=%s&key=%s&locale=%s&screenshot=%s';
+    public const GI_API_ENDPOINT = 'https://www.googleapis.com/pagespeedonline/v2/runPagespeed?url=%s&strategy=%s&key=%s&locale=%s&screenshot=%s';
 
-    /** @var string */
-    private $apiKey;
+    private bool $captureScreenshot = true;
 
-    /** @var string */
-    private $locale;
-
-    /** @var bool */
-    private $captureScreenshot;
-
-    /** @var Client */
-    private $client;
+    private readonly Client $client;
 
     /**
      * InsightsCaller constructor.
-     *
-     * @param string $apiKey
-     * @param string $locale
-     * @param array $config
      */
-    public function __construct($apiKey, $locale = 'en', $config = array())
+    public function __construct(private readonly string $apiKey, private readonly string $locale = 'en', array $config = [])
     {
         $this->client = new Client($config);
-        $this->apiKey = $apiKey;
-        $this->locale = $locale;
-        $this->captureScreenshot = true;
 
     }
 
     /**
-     * @param string $url
-     * @param string $strategy
      *
-     * @return InsightsResponse
+     * @throws ApiRequestException|InvalidJsonException
      */
-    public function __invoke($url, $strategy = self::STRATEGY_MOBILE)
+    public function __invoke(string $url, string $strategy = self::STRATEGY_MOBILE): InsightsResponse
     {
         return $this->getResponse($url, $strategy);
     }
 
-
     /**
-     * @param string $url
-     * @param string $strategy
      *
-     * @return InsightsResponse
      *
      * @throws ApiRequestException
+     * @throws InvalidJsonException
      */
-    public function getResponse($url, $strategy = 'mobile')
+    public function getResponse(string $url, string $strategy = 'mobile'): InsightsResponse
     {
         $apiEndpoint = $this->createApiEndpointUrl($url, $strategy);
 
         try {
             $response = $this->client->request('GET', $apiEndpoint);
-        } catch (TransferException $e) {
+        } catch (TransferException|GuzzleException $e) {
             throw new ApiRequestException($e->getMessage());
         }
 
@@ -77,20 +59,15 @@ class InsightsCaller
     }
 
     /**
-     * @param array $urls
-     * @param string $strategy
-     *
-     * @return InsightsResponse
-     *
      * @throws ApiRequestException
+     * @throws InvalidJsonException
      */
-    public function getResponses(array $urls, $strategy = 'mobile')
+    public function getResponses(array $urls, string $strategy = 'mobile'): InsightsResponse|array
     {
-
         try {
-            $promises = array();
+            $promises = [];
 
-            foreach ($urls as $k=>$url) {
+            foreach ($urls as $k => $url) {
                 $apiEndpoint = $this->createApiEndpointUrl($url, $strategy);
                 $promises[$k] = $this->client->getAsync($apiEndpoint);
             }
@@ -98,51 +75,36 @@ class InsightsCaller
             $results = Promise\unwrap($promises);
             $results = Promise\settle($promises)->wait();
 
-            $responses = array();
+            $responses = [];
 
-            foreach ($urls as $k=>$url) {
+            foreach ($urls as $k => $url) {
                 $response = $results[$k]['value'];
                 $responses[$url] = InsightsResponse::fromResponse($response);
             }
 
 
-        } catch (TransferException $e) {
-            throw new ApiRequestException($e->getMessage());
+        } catch (TransferException $transferException) {
+            throw new ApiRequestException($transferException->getMessage());
         }
 
         return $responses;
 
     }
 
-    /**
-     * @return boolean
-     */
-    public function isCaptureScreenshot()
+    public function isCaptureScreenshot(): bool
     {
         return $this->captureScreenshot;
     }
 
-    /**
-     * @param boolean $captureScreenshot
-     */
-    public function setCaptureScreenshot($captureScreenshot)
+    public function setCaptureScreenshot(bool $captureScreenshot): void
     {
         $this->captureScreenshot = $captureScreenshot;
     }
 
-
-    /**
-     * @param string $url
-     * @param string $strategy
-     *
-     * @return string
-     */
-    protected function createApiEndpointUrl($url, $strategy = 'mobile')
+    protected function createApiEndpointUrl(string $url, string $strategy = 'mobile'): string
     {
         $screenshot = ($this->isCaptureScreenshot()) ? 'true' : 'false';
 
         return sprintf(self::GI_API_ENDPOINT, $url, $strategy, $this->apiKey, $this->locale, $screenshot);
     }
-
-
 }

@@ -2,99 +2,73 @@
 namespace PhpInsights\Result\Map\FormattedResults;
 
 
-class AbstractRuleResult
+use Stringable;
+
+class AbstractRuleResult implements Stringable
 {
-    /** @var string */
-    private $localizedRuleName;
+    private string $localizedRuleName;
 
-    /** @var float */
-    private $ruleImpact;
+    private float $ruleImpact;
 
-    /** @var array */
-    private $groups;
+    private array $groups;
 
-    /** @var \PhpInsights\Result\Map\FormattedResults\Summary */
-    private $summary;
+    private Summary $summary;
 
-    /** @var \PhpInsights\Result\Map\FormattedResults\UrlBlock[] */
-    public $urlBlocks;
+    /** @var UrlBlock[] */
+    public array $urlBlocks;
 
-    /**
-     * @param string $localizedRuleName
-     */
-    public function setLocalizedRuleName($localizedRuleName)
+    public function setLocalizedRuleName(string $localizedRuleName): void
     {
         $this->localizedRuleName = $localizedRuleName;
     }
 
-    /**
-     * @return string
-     */
-    public function getLocalizedRuleName()
+    public function getLocalizedRuleName(): string
     {
         return $this->localizedRuleName;
     }
 
-    /**
-     * @return float
-     */
-    public function getRuleImpact()
+    public function getRuleImpact(): float
     {
         return $this->ruleImpact;
     }
 
-    /**
-     * @param float $ruleImpact
-     */
-    public function setRuleImpact($ruleImpact)
+    public function setRuleImpact(float $ruleImpact): void
     {
         $this->ruleImpact = $ruleImpact;
     }
 
-    /**
-     * @return Summary
-     */
-    public function getSummary()
+    public function getSummary(): Summary
     {
         return $this->summary;
     }
 
-    /**
-     * @param Summary $summary
-     */
-    public function setSummary($summary)
+    public function setSummary(Summary $summary): void
     {
         $this->summary = $summary;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasSummary()
+    public function hasSummary(): bool
     {
-        return !empty($this->summary);
+        return $this->summary instanceof \PhpInsights\Result\Map\FormattedResults\Summary;
     }
 
     /**
      * @return UrlBlock[]
      */
-    public function getUrlBlocks()
+    public function getUrlBlocks(): array
     {
         return $this->urlBlocks;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasUrlBlocks()
+    public function hasUrlBlocks(): bool
     {
-        return !empty($this->urlBlocks) && is_array($this->urlBlocks);
+        return $this->urlBlocks !== [];
     }
 
     /**
      * @return FormattedBlock[]
      */
-    public function getDetails()
+    public function getDetails(): array
     {
 
         $details = [];
@@ -116,40 +90,24 @@ class AbstractRuleResult
 
     }
 
-    /**
-     * @return array
-     */
-    public function getGroups()
+    public function getGroups(): array
     {
         return $this->groups;
     }
 
-    /**
-     * @param array $groups
-     */
-    public function setGroups($groups)
+    public function setGroups(array $groups): void
     {
         $this->groups = $groups;
     }
 
-
-    /**
-     * @return string
-     */
-    public function toString()
+    public function toString(): string
     {
 
         return sprintf('%s (Impact %s)', $this->getLocalizedRuleName(), $this->getRuleImpact());
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->toString();
     }
-
-
-
 }
